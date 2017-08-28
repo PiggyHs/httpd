@@ -1,30 +1,27 @@
-#ifndef _HTTPD_
-#define _HTTPD_
-#include<stdio.h>
-#include<stdlib.h>
-#include<sys/types.h>
-#include<sys/socket.h>
-#include<netinet/in.h>
-#include<fcntl.h>
-#include<errno.h>
-#include<strings.h>
-#include<sys/stat.h>
-#include<unistd.h>
-#include<arpa/inet.h>
-#include<string.h>
-#include<signal.h>
-#include<sys/sendfile.h>
+#ifndef _HTTPD_H_
+#define _HTTPD_H_
 
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <sys/sendfile.h>
+#include <string.h>
+#include <sys/stat.h>
+
+#define BACKLOG 10
 #define SIZE 1024
-#define SERVER_STRING "Server:hshttpd.1.0.0\r\n"
-int get_line(int sock,char*buf,int size);
-int startup(const char* _ip,int _port);
-void* handler_requst(void* arg);
 
-static void execute_cgi(int client,const char *path,const char* method,char* query_string);
-static void unimplemented(int client);
-static void cat(int client,FILE* file);
-static void not_found(int client);
-static server_file(int client, const char *filename);
-static void headers(int client,const char* filename);
+int echo_www(int sock, const char *path, int size);
+int get_line(int sock, char *buff, int size);
+int startup(const char *ip, int port);
+void *handler_request(void *arg);
+void exe_cgi(int sock, const char *method,const char *query_string,const char *path);
+void error_response(int sock, int err_code);
+
 #endif
